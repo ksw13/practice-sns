@@ -15,10 +15,13 @@ public class UserService {
     private final UserEntityRepository userEntityRepository;
 
     public User join(String userName, String password) {
-        Optional<UserEntity> userEntity = userEntityRepository.findByUserName(userName);
+        userEntityRepository.findByUserName(userName).ifPresent(it -> {
+            throw new SnsApplicationException();
+        });
 
+        UserEntity userEntity = userEntityRepository.save(UserEntity.of(userName, password));
 
-        return new User();
+        return User.fromEntity(userEntity);
     }
 
     public String login(String userName, String password) {
