@@ -1,5 +1,6 @@
 package com.example.sns.service;
 
+import com.example.sns.exception.ErrorCode;
 import com.example.sns.exception.SnsApplicationException;
 import com.example.sns.model.User;
 import com.example.sns.model.entity.UserEntity;
@@ -16,7 +17,7 @@ public class UserService {
 
     public User join(String userName, String password) {
         userEntityRepository.findByUserName(userName).ifPresent(it -> {
-            throw new SnsApplicationException();
+            throw new SnsApplicationException(ErrorCode.DUPLICATED_USER_NAME, String.format("%s is duplicated", userName));
         });
 
         UserEntity userEntity = userEntityRepository.save(UserEntity.of(userName, password));
